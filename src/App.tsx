@@ -1,44 +1,57 @@
 import React from 'react';
-import {
-  SafeAreaView,
-  StyleSheet,
-  ScrollView,
-  View,
-  Text,
-  StatusBar,
-  ViewStyle,
-  TextStyle,
-} from 'react-native';
-import {NavigationContainer} from '@react-navigation/native';
+import {NavigationContainer, RouteProp} from '@react-navigation/native';
+import {createMaterialTopTabNavigator, MaterialTopTabNavigationProp} from '@react-navigation/material-top-tabs';
+import {BaseScreen} from './BaseScreen';
 
-interface AppStyle {
-  wrapper: ViewStyle;
-  title: TextStyle;
+export interface AppScreenProps {
+    text: string;
 }
 
+export enum AppScreen {
+    First = "First",
+    Second = "Second",
+    Third = "Third",
+}
+
+export type AppScreens = {
+    First: AppScreenProps;
+    Second: AppScreenProps;
+    Third: AppScreenProps;
+}
+
+export type BaseScreenRouteProp =
+    RouteProp<AppScreens, AppScreen.First> |
+    RouteProp<AppScreens, AppScreen.Second> |
+    RouteProp<AppScreens, AppScreen.Third>;
+
+export type BaseScreenNavigationProp =
+    MaterialTopTabNavigationProp<AppScreens, AppScreen.First> |
+    MaterialTopTabNavigationProp<AppScreens, AppScreen.Second> |
+    MaterialTopTabNavigationProp<AppScreens, AppScreen.Third>;
+
 const App: React.FC = (): React.ReactElement => {
-  const style: StyleSheet.NamedStyles<AppStyle> = StyleSheet.create({
-    wrapper: {
-      marginTop: 32,
-      paddingHorizontal: 24,
-    },
-    title: {
-      fontSize: 24,
-      fontWeight: '600',
-    },
-  });
+  const Tab = createMaterialTopTabNavigator<AppScreens>();
 
   return (
     <>
       <NavigationContainer>
-      <StatusBar />
-      <SafeAreaView>
-        <ScrollView>
-          <View style={style.wrapper}>
-            <Text style={style.title}>React Native</Text>
-          </View>
-        </ScrollView>
-      </SafeAreaView>
+          <Tab.Navigator>
+              <Tab.Screen
+                  name={AppScreen.First}
+                  component={BaseScreen}
+                  initialParams={{text: "1st screen"}}
+              />
+              <Tab.Screen
+                  name={AppScreen.Second}
+                  component={BaseScreen}
+                  initialParams={{text: "2nd screen"}}
+              />
+              <Tab.Screen
+                  name={AppScreen.Third}
+                  component={BaseScreen}
+                  initialParams={{text: "3rd screen"}}
+              />
+          </Tab.Navigator>
       </NavigationContainer>
     </>
   );
